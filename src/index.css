@@ -1,0 +1,741 @@
+:root {
+  /* Chainscrape — frontier mining settlement in the Daunt.
+     Warm canyon dusk: weathered timber, sandstone, brass lantern light. */
+  --cs-night: #1b130d;
+  --cs-deep: #241910;
+  --cs-wood: #4a3320;
+  --cs-wood-edge: #6b4a2e;
+  --cs-wood-dark: #2c1f14;
+  --cs-sand: #e4d2af;
+  --cs-parchment: #efe2c4;
+  --cs-ochre: #cf8638;
+  --cs-ochre-light: #f0c382;
+  --cs-gold-light: #f3d199;
+  --cs-rust: #b04a2c;
+  --cs-rust-deep: #8a3620;
+  --cs-sage: #8aa07b;
+  --cs-text: #ece0cd;
+  --cs-muted: #ab9476;
+  --cs-danger: #b04a2c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Spectral", Georgia, serif;
+  color: var(--cs-text);
+  background-color: var(--cs-night);
+  /* Chainscrape canyon backdrop, darkened for readability. Warm glows sit on
+     top; if the photo is missing the gradients alone still look right.
+     Drop the image at public/items/chainscrape.webp to enable it. */
+  background-image:
+    url("../src/assets/Chainscrape.webp"),
+    radial-gradient(
+      ellipse at 72% -12%,
+      rgba(240, 170, 80, 0.18),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 8% 112%,
+      rgba(160, 70, 40, 0.16),
+      transparent 52%
+    ),
+    linear-gradient(180deg, rgba(18, 12, 7, 0.84), rgba(18, 12, 7, 0.93));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.hfw-display {
+  font-family: "Cinzel", serif;
+  letter-spacing: 0.02em;
+}
+
+.hfw-eyebrow {
+  font-family: "Spectral", serif;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--cs-ochre);
+  text-shadow: #000000 0px 2px 5px;
+}
+
+.text-gold {
+  color: var(--cs-gold-light) !important;
+  text-shadow: #150d07 1px 2px 10px;
+}
+
+.text-glow {
+  color: var(--cs-sage) !important;
+}
+
+/* ---------- Navbar — a weathered timber beam ---------- */
+.hfw-navbar {
+  background: linear-gradient(180deg, #2a1d12 0%, #20160d 100%) !important;
+  border-bottom: 2px solid var(--cs-wood-edge);
+  box-shadow:
+    0 4px 0 rgba(0, 0, 0, 0.25),
+    0 10px 26px rgba(0, 0, 0, 0.55);
+}
+
+.hfw-brand {
+  font-family: "Cinzel", serif;
+  font-weight: 700;
+  color: var(--cs-gold-light) !important;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  letter-spacing: 0.05em;
+}
+
+.hfw-brand img {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  width: 34px;
+  height: 34px;
+  /* Your drop shadow glows perfectly around transparent edges */
+  filter: drop-shadow(0 0 5px rgba(207, 134, 56, 0.55));
+}
+
+.hfw-navbar .nav-link {
+  color: var(--cs-sand) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin: 0 0.35rem;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.hfw-navbar .nav-link:hover,
+.hfw-navbar .nav-link.active {
+  color: var(--cs-ochre-light) !important;
+}
+
+.hfw-navbar .nav-link.active::after {
+  content: "";
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: -2px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cs-rust), var(--cs-ochre));
+}
+
+.hfw-navbar .navbar-toggler {
+  border-color: var(--cs-wood-edge);
+}
+
+/* ---------- Buttons — brass & lantern light ---------- */
+.btn-hfw {
+  position: relative;
+  background: linear-gradient(135deg, #e6aa54, #bf7a2c);
+  border: none;
+  color: #2a1a0c;
+  font-family: "Spectral", serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.55rem 1.5rem;
+  border-radius: 3px;
+  box-shadow:
+    0 2px 0 #7a4e22,
+    0 5px 12px rgba(0, 0, 0, 0.4);
+  overflow: visible;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
+  clip-path: polygon(
+    /* Top Edge Jagged Points */ 0% 8%,
+    10% 2%,
+    20% 8%,
+    30% 2%,
+    40% 8%,
+    50% 2%,
+    60% 8%,
+    70% 2%,
+    80% 8%,
+    90% 2%,
+    100% 8%,
+    /* Right Edge Jagged Points */ 98% 20%,
+    100% 35%,
+    98% 50%,
+    100% 65%,
+    98% 80%,
+    100% 92%,
+    /* Bottom Edge Jagged Points */ 90% 98%,
+    80% 92%,
+    70% 98%,
+    60% 92%,
+    50% 98%,
+    40% 92%,
+    30% 98%,
+    20% 92%,
+    10% 98%,
+    0% 92%,
+    /* Left Edge Jagged Points */ 2% 80%,
+    0% 65%,
+    2% 50%,
+    0% 35%,
+    2% 20%
+  );
+}
+
+.btn-hfw::before,
+.btn-hfw::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  /* Replaced old white hex with dark wood blend overlays */
+  background-image:
+    linear-gradient(45deg, transparent 50%, #bf7a2c 50%),
+    linear-gradient(-45deg, transparent 50%, #bf7a2c 50%);
+  background-size: 6px 6px;
+  background-repeat: repeat-x;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Align Top Rip */
+.btn-hfw::before {
+  top: -1px;
+  transform: rotate(180deg);
+  background-image:
+    linear-gradient(45deg, transparent 50%, #e6aa54 50%),
+    linear-gradient(-45deg, transparent 50%, #e6aa54 50%);
+}
+
+/* Align Bottom Rip */
+.btn-hfw::after {
+  bottom: -1px;
+}
+
+/* Hover & Focus overrides remain consistent */
+.btn-hfw:hover,
+.btn-hfw:focus {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.45);
+  color: var(--cs-gold-light);
+}
+
+.btn-hfw:active {
+  transform: translateY(1px);
+  box-shadow:
+    0 1px 0 #7a4e22,
+    0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.btn-hfw-outline {
+  background: #2c2016;
+  border: 1px solid var(--cs-ochre);
+  color: var(--cs-ochre-light);
+  font-family: "Spectral", serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  color: #daa57a;
+}
+
+.btn-hfw-outline:hover,
+.btn-hfw-outline:focus {
+  background: rgba(207, 134, 56, 0.72);
+  color: var(--cs-wood-dark);
+  border-color: var(--cs-gold-light);
+}
+#music-btn {
+  background: transparent;
+  border: none;
+}
+#music-btn:hover {
+  color: var(--cs-wood-dark);
+  border-color: var(--cs-gold-light);
+  transform: -2px;
+}
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.bounce-animation {
+  animation: bounce 0.6s ease infinite;
+}
+.btn-danger {
+  background-color: var(--cs-danger);
+}
+/* ---------- Panels / Cards — market stall crates ---------- */
+.hfw-card {
+  background: linear-gradient(180deg, var(--cs-wood-dark), #1d140c);
+  border: 1px solid var(--cs-wood);
+  border-top: 2px solid rgba(207, 134, 56, 0.45);
+  border-radius: 4px;
+  overflow: hidden;
+  height: 100%;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.2),
+    0 6px 16px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.hfw-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--cs-ochre);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.2),
+    0 14px 30px rgba(0, 0, 0, 0.6);
+}
+
+.hfw-card .card-title {
+  font-family: "Cinzel", serif;
+  font-weight: 600;
+  font-size: 1.02rem;
+  color: var(--cs-sand);
+  min-height: 2.6em;
+}
+
+.hfw-img-wrap {
+  background: radial-gradient(circle at center, #f3e6c8, #d8c4a0);
+  border-bottom: 1px solid var(--cs-wood);
+  padding: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 220px;
+}
+
+.hfw-img-wrap img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+}
+
+.hfw-price {
+  font-family: "Cinzel", serif;
+  font-weight: 700;
+  color: var(--cs-gold-light);
+  font-size: 1.2rem;
+}
+
+/* leather/cloth tag */
+.hfw-category-badge {
+  background: rgba(74, 51, 32, 0.7);
+  border: 1px solid rgba(207, 134, 56, 0.5);
+  color: var(--cs-ochre-light);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 2px;
+}
+
+/* ---------- Forms — a merchant's ledger ---------- */
+.hfw-form-panel {
+  background: linear-gradient(180deg, #2a1d12, #1f150d);
+  border: 1px solid var(--cs-wood);
+  border-top: 2px solid rgba(207, 134, 56, 0.4);
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+}
+
+.hfw-form-panel .form-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cs-ochre);
+}
+
+.hfw-form-panel .form-control,
+.hfw-form-panel .form-select {
+  background-color: #160f08;
+  border: 1px solid var(--cs-wood);
+  color: var(--cs-text);
+  border-radius: 3px;
+}
+
+.hfw-form-panel .form-control:focus,
+.hfw-form-panel .form-select:focus {
+  background-color: #1c130a;
+  border-color: var(--cs-ochre);
+  color: var(--cs-text);
+  box-shadow: 0 0 0 0.2rem rgba(207, 134, 56, 0.2);
+}
+
+.hfw-form-panel .form-control::placeholder {
+  color: var(--cs-muted);
+}
+
+/* ---------- Hero — canyon at dusk ---------- */
+.hfw-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  opacity: 55%;
+  background:
+    radial-gradient(
+      circle at 76% 26%,
+      rgba(245, 180, 90, 0.6),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 12% 88%,
+      rgba(160, 70, 40, 0.34),
+      transparent 75%
+    ),
+    linear-gradient(160deg, #2e1f11, #150d07),
+    transparent 75%;
+}
+
+.hfw-hero {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 5rem 2rem;
+  border: 1px solid var(--cs-wood);
+  border-top: 2px solid rgba(207, 134, 56, 0.5);
+  box-shadow: inset 0 -40px 80px rgba(0, 0, 0, 0.55);
+  text-align: center;
+}
+.hfw-hero > * {
+  position: relative;
+  z-index: 2;
+}
+
+.hfw-hero h1 {
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  color: var(--cs-sand);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+.hfw-hero p {
+  max-width: 640px;
+  margin: 1.2rem auto 2rem;
+  font-size: 1.15rem;
+  color: var(--cs-text);
+}
+
+.hfw-divider {
+  width: 500px;
+  height: 3px;
+  margin: 1rem auto;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cs-ochre),
+    var(--cs-rust),
+    var(--cs-ochre),
+    transparent
+  );
+}
+
+/* ---------- Misc ---------- */
+.hfw-spinner {
+  color: var(--cs-ochre) !important;
+}
+
+.mb-1 {
+  color: #150d07;
+  font-size: large;
+  text-shadow: #150d07 0px 2px 10px;
+}
+
+.hfw-detail-img {
+  background: radial-gradient(circle at center, #f3e6c8, #d3bf99);
+  border: 1px solid var(--cs-wood);
+  border-radius: 10px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 360px;
+}
+
+.hfw-detail-img img {
+  max-height: 380px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.hfw-footer {
+  border-top: 2px solid var(--cs-wood-edge);
+  background: linear-gradient(180deg, #2a1d12 0%, #1a120b 100%);
+  color: var(--cs-sand);
+  text-align: center;
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.hfw-modal .modal-content {
+  background: linear-gradient(180deg, #2a1d12, #1f150d);
+  border: 1px solid rgba(207, 134, 56, 0.5);
+  color: var(--cs-text);
+  border-radius: 6px;
+}
+
+.hfw-modal .modal-header,
+.hfw-modal .modal-footer {
+  border-color: var(--cs-wood);
+}
+
+a.hfw-link {
+  color: var(--cs-ochre-light);
+  text-decoration: none;
+  margin-top: 2%;
+  font-size: large;
+  text-shadow: #150d07 0px 2px 10px;
+}
+
+a.hfw-link:hover {
+  color: var(--cs-gold-light);
+}
+
+/* ---------- Cart badge in navbar ---------- */
+.hfw-cart-link {
+  display: inline-flex !important;
+  align-items: center;
+}
+
+.hfw-cart-badge {
+  background: linear-gradient(135deg, #e6aa54, #bf7a2c) !important;
+  color: #2a1a0c !important;
+  font-weight: 700;
+  border: 1px solid #8a5a26;
+}
+
+/* ---------- Subtype chips — cloth tags ---------- */
+.hfw-chip {
+  background: transparent;
+  border: 1px solid var(--cs-wood-edge);
+  color: var(--cs-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  transition: all 0.18s ease;
+}
+
+.hfw-chip:hover {
+  color: var(--cs-ochre-light);
+  border-color: var(--cs-ochre);
+}
+
+.hfw-chip.active {
+  background: rgba(207, 134, 56, 0.16);
+  border-color: var(--cs-ochre);
+  color: var(--cs-gold-light);
+}
+
+/* ---------- Quantity stepper ---------- */
+.hfw-qty {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--cs-wood-edge);
+  border-radius: 3px;
+  overflow: hidden;
+  background-color: var(--cs-rust-deep);
+}
+
+.hfw-qty-btn {
+  background: rgba(207, 134, 56, 0.14);
+  border: none;
+  color: var(--cs-gold-light);
+  font-size: 1.2rem;
+  line-height: 1;
+  width: 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+}
+
+.hfw-qty-btn:hover,
+.hfw-qty-btn:focus {
+  background: rgba(207, 134, 56, 0.28);
+  color: var(--cs-gold-light);
+}
+
+.hfw-qty-input {
+  width: 3.5rem;
+  text-align: center;
+  background-color: #160f08 !important;
+  border: none !important;
+  border-left: 1px solid var(--cs-wood) !important;
+  border-right: 1px solid var(--cs-wood) !important;
+  color: var(--cs-text) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  -moz-appearance: textfield;
+}
+
+.hfw-qty-input::-webkit-outer-spin-button,
+.hfw-qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ---------- Cart page ---------- */
+.hfw-cart-row {
+  border-bottom: 1px solid var(--cs-wood);
+  padding: 1rem 0;
+}
+
+.hfw-cart-thumb {
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+}
+
+.hfw-cart-thumb img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.hfw-remove {
+  color: var(--cs-muted);
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.hfw-remove:hover {
+  color: var(--cs-danger);
+}
+.items {
+  font-size: 20px;
+}
+
+.py-5,
+.hfw-cart-list {
+  background: #150d07ad;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* ---------- Shards currency ---------- */
+.hfw-shards {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  white-space: nowrap;
+}
+
+.hfw-shards-icon {
+  height: 1.15em;
+  width: auto;
+  flex: none;
+  transform: translateY(0.04em);
+}
+
+/* ---------- Specifications panel (product details) ---------- */
+
+.product-item {
+  padding: 1%;
+  margin-top: 20px;
+  position: relative;
+  border-radius: 10px;
+}
+.product-item::before {
+  background-color: var(--cs-deep);
+  opacity: 55%;
+  border-radius: 10px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  content: "";
+  position: absolute;
+}
+
+.hfw-stats {
+  background: linear-gradient(180deg, #2a1d12, #1f150d);
+  border: 1px solid var(--cs-wood);
+  border-top: 2px solid rgba(207, 134, 56, 0.4);
+  border-radius: 6px;
+  padding: 1.5rem 1.75rem;
+}
+
+.hfw-stats h3 {
+  color: var(--cs-gold-light);
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.hfw-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.1rem 2rem;
+}
+
+@media (max-width: 575px) {
+  .hfw-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hfw-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(74, 51, 32, 0.6);
+}
+
+.hfw-stat-label {
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--cs-ochre);
+  flex: none;
+}
+
+.hfw-stat-value {
+  text-align: right;
+  color: var(--cs-sand);
+  font-weight: 500;
+}
