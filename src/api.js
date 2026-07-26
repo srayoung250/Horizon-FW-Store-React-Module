@@ -1,116 +1,56 @@
 // Central place for all Forbidden West merchant API calls.
-// Served by the local Express server under /api/v1 (proxied by Vite in dev).
-const BASE_URL = '/api/v1'
+// Now backed by Firestore instead of the local Express server.
+import {
+  collection,
+  doc,
+  getDocs,
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "./firebase";
 
-async function handle(res) {
-  if (!res.ok) {
-    // Try to surface the server's error message when present.
-    let detail = `${res.status} ${res.statusText}`
-    try {
-      const body = await res.json()
-      if (body?.error) detail = body.error
-    } catch {
-      /* response had no JSON body */
-    }
-    throw new Error(detail)
+const productsRef = collection(db, "products");
+
+export async function getProducts() {
+  const snap = await getDocs(productsRef);
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function getProductsByCategory(category, subtype) {
+  let q;
+  if (subtype) {
+    q = query(
+      productsRef,
+      where("category", "==", category),
+      where("subtype", "==", subtype),
+    );
+  } else {
+    q = query(productsRef, where("category", "==", category));
   }
-  return res.json()
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-export function getProducts() {
-  return fetch(`${BASE_URL}/products`).then(handle)
+export async function getProduct(id) {
+  const snap = await getDoc(doc(db, "products", id));
+  if (!snap.exists()) return null;
+  return { id: snap.id, ...snap.data() };
 }
 
-export function getProductsByCategory(category, subtype) {
-  const url = subtype
-    ? `${BASE_URL}/products/category/${category}?subtype=${subtype}`
-    : `${BASE_URL}/products/category/${category}`
-  return fetch(url).then(handle)
+export async function createProduct(product) {
+  const docRef = await addDoc(productsRef, product);
+  return { id: docRef.id, ...product };
 }
 
-export function getProduct(id) {
-  return fetch(`${BASE_URL}/products/${id}`).then(handle)
+export async function updateProduct(id, product) {
+  await updateDoc(doc(db, "products", id), product);
+  return { id, ...product };
 }
 
-export function createProduct(product) {
-  return fetch(`${BASE_URL}/products`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(product),
-  }).then(handle)
-}
-
-export function updateProduct(id, product) {
-  return fetch(`${BASE_URL}/products/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(product),
-  }).then(handle)
-}
-
-export function deleteProduct(id) {
-  return fetch(`${BASE_URL}/products/${id}`, { method: 'DELETE' }).then(handle)
-}
-
-// Merchant taxonomy — categories and their subtypes.
-// Mirrors the server's CATEGORY_META (also available at GET /api/v1/categories).
-export const TAXONOMY = [
-  {
-    slug: 'bows',
-    label: 'Bows',
-    subtypes: [
-      { slug: 'hunter', label: 'Hunter' },
-      { slug: 'sharpshot', label: 'Sharpshot' },
-      { slug: 'warrior', label: 'Warrior' },
-    ],
-  },
-  {
-    slug: 'outfits',
-    label: 'Outfits',
-    subtypes: [
-      { slug: 'nora', label: 'Nora' },
-      { slug: 'carja', label: 'Carja' },
-      { slug: 'tenakth', label: 'Tenakth' },
-      { slug: 'utaru', label: 'Utaru' },
-      { slug: 'banuk', label: 'Banuk' },
-      { slug: 'oseram', label: 'Oseram' },
-    ],
-  },
-  {
-    slug: 'gadgets',
-    label: 'Gadgets',
-    subtypes: [
-      { slug: 'traversal', label: 'Tools' },
-      { slug: 'combat', label: 'Heavy Arms' },
-    ],
-  },
-  {
-    slug: 'boosts',
-    label: 'Boosts',
-    subtypes: [
-      { slug: 'potions', label: 'Potions' },
-      { slug: 'food', label: 'Food' },
-    ],
-  },
-  {
-    slug: 'ammo',
-    label: 'Ammo',
-    subtypes: [
-      { slug: 'arrows', label: 'Arrows' },
-      { slug: 'resources', label: 'Resources' },
-    ],
-  },
-]
-
-// Convenience helpers for forms / labels.
-export const CATEGORIES = TAXONOMY.map(({ slug, label }) => ({ slug, label }))
-
-export function subtypesFor(categorySlug) {
-  return TAXONOMY.find((c) => c.slug === categorySlug)?.subtypes ?? []
-}
-
-export function subtypeLabel(categorySlug, subtypeSlug) {
-  return (
-    subtypesFor(categorySlug).find((s) => s.slug === subtypeSlug)?.label ?? subtypeSlug
-  )
+export async function deleteProduct(id) {
+  await deleteDoc(doc(db, "products", id));
 }
