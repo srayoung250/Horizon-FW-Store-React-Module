@@ -1,13 +1,14 @@
-import { Routes, Route } from 'react-router-dom'
-import { Container } from 'react-bootstrap'
-import NavigationBar from './components/NavigationBar.jsx'
-import Home from './pages/Home.jsx'
-import ProductListing from './pages/ProductListing.jsx'
-import ProductDetails from './pages/ProductDetails.jsx'
-import AddProduct from './pages/AddProduct.jsx'
-import EditProduct from './pages/EditProduct.jsx'
-import Cart from './pages/Cart.jsx'
-import NotFound from './pages/NotFound.jsx'
+import { Routes, Route } from "react-router-dom";
+import { Container } from "react-bootstrap";
+import NavigationBar from "./components/NavigationBar.jsx";
+import Home from "./pages/Home.jsx";
+import ProductListing from "./pages/ProductListing.jsx";
+import ProductDetails from "./pages/ProductDetails.jsx";
+import AddProduct from "./pages/AddProduct.jsx";
+import EditProduct from "./pages/EditProduct.jsx";
+import Cart from "./pages/Cart.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import Register from "./pages/Register.jsx";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Container className="py-4 py-md-5">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/products" element={<ProductListing />} />
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/add-product" element={<AddProduct />} />
@@ -30,7 +32,7 @@ function App() {
         </Container>
       </footer>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

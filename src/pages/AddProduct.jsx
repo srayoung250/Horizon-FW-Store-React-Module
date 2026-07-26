@@ -1,38 +1,44 @@
-import { useState } from 'react'
-import { Form, Button, Row, Col, Alert } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import { createProduct, CATEGORIES, subtypesFor } from '../api.js'
+import { useState } from "react";
+import { Form, Button, Row, Col, Alert } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { createProduct, CATEGORIES, subtypesFor } from "../api.js";
 
-const EMPTY = { title: '', price: '', description: '', category: '', subtype: '' }
+const EMPTY = {
+  title: "",
+  price: "",
+  description: "",
+  category: "",
+  subtype: "",
+};
 
 function AddProduct() {
-  const [form, setForm] = useState(EMPTY)
-  const [validated, setValidated] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [result, setResult] = useState(null)
-  const [error, setError] = useState(null)
+  const [form, setForm] = useState(EMPTY);
+  const [validated, setValidated] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   // Changing category invalidates the previously chosen subtype.
   const handleCategoryChange = (e) => {
-    setForm({ ...form, category: e.target.value, subtype: '' })
-  }
+    setForm({ ...form, category: e.target.value, subtype: "" });
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    const formEl = e.currentTarget
+    e.preventDefault();
+    const formEl = e.currentTarget;
     if (!formEl.checkValidity()) {
-      e.stopPropagation()
-      setValidated(true)
-      return
+      e.stopPropagation();
+      setValidated(true);
+      return;
     }
 
-    setSubmitting(true)
-    setError(null)
-    setResult(null)
+    setSubmitting(true);
+    setError(null);
+    setResult(null);
 
     createProduct({
       title: form.title,
@@ -42,13 +48,13 @@ function AddProduct() {
       subtype: form.subtype || null,
     })
       .then((data) => {
-        setResult(data)
-        setForm(EMPTY)
-        setValidated(false)
+        setResult(data);
+        setForm(EMPTY);
+        setValidated(false);
       })
       .catch((err) => setError(err.message))
-      .finally(() => setSubmitting(false))
-  }
+      .finally(() => setSubmitting(false));
+  };
 
   return (
     <Row className="justify-content-center">
@@ -61,13 +67,16 @@ function AddProduct() {
 
         {result && (
           <Alert variant="success" dismissible onClose={() => setResult(null)}>
-            <Alert.Heading className="hfw-display">Product Created!</Alert.Heading>
+            <Alert.Heading className="hfw-display">
+              Product Created!
+            </Alert.Heading>
             <p className="mb-1">
               "{result.title || form.title}" was added to the merchant's stock
-              {result.id ? ` (assigned ID ${result.id})` : ''}.
+              {result.id ? ` (assigned ID ${result.id})` : ""}.
             </p>
             <small className="text-muted">
-              It will appear in the catalog until the server restarts (in-memory store).
+              It will appear in the catalog until the server restarts (in-memory
+              store).
             </small>
           </Alert>
         )}
@@ -149,7 +158,9 @@ function AddProduct() {
                   required
                 >
                   <option value="">
-                    {form.category ? 'Choose a subtype…' : 'Select a category first'}
+                    {form.category
+                      ? "Choose a subtype…"
+                      : "Select a category first"}
                   </option>
                   {subtypesFor(form.category).map((s) => (
                     <option key={s.slug} value={s.slug}>
@@ -182,7 +193,7 @@ function AddProduct() {
 
           <div className="d-flex flex-wrap gap-2">
             <Button type="submit" className="btn-hfw" disabled={submitting}>
-              {submitting ? 'Creating…' : 'Create Product'}
+              {submitting ? "Creating…" : "Create Product"}
             </Button>
             <Link to="/products" className="btn btn-hfw-outline">
               Cancel
@@ -191,7 +202,7 @@ function AddProduct() {
         </Form>
       </Col>
     </Row>
-  )
+  );
 }
 
-export default AddProduct
+export default AddProduct;
